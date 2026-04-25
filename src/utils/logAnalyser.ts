@@ -11,7 +11,7 @@ const logs = [
   'USER:john|ACTION:login|TIME:12:45|EMAIL:john.doe@gmail.com',
 ];
 
-const logSplitter = (logs: string[]): string[][] => {
+export const logSplitter = (logs: string[]): string[][] => {
   const splitLogs: string[][] = [];
   logs.forEach((arr) => {
     splitLogs.push(arr.split('|'));
@@ -34,7 +34,7 @@ type Log = {
 //   email: 'email',
 // };
 
-const objectCreator = (arrayLogs: string[][]): Log[] => {
+export const objectCreator = (arrayLogs: string[][]): Log[] => {
   const returnValue: Log[] = [];
   arrayLogs.forEach((arr) => {
     const obj: Partial<Log> = {};
@@ -44,14 +44,11 @@ const objectCreator = (arrayLogs: string[][]): Log[] => {
       const value = arr3[1];
       if (key === 'user') {
         obj.user = value;
-      }
-      else if (key === 'action') {
+      } else if (key === 'action') {
         obj.action = value;
-      }
-      else if (key === 'email') {
+      } else if (key === 'email') {
         obj.email = value;
-      }
-      else if (key === 'time') {
+      } else if (key === 'time') {
         obj.time = value;
       }
     });
@@ -61,5 +58,3 @@ const objectCreator = (arrayLogs: string[][]): Log[] => {
   });
   return returnValue;
 };
-
-console.log(objectCreator(logSplitter(logs)));
