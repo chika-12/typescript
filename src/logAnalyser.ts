@@ -24,6 +24,7 @@ type Log = {
   action: string;
   time: string;
   email: string;
+  isEmailValid: boolean;
 };
 
 const objectCreator = (arrayLogs: string[][]): Log[] => {
@@ -34,9 +35,12 @@ const objectCreator = (arrayLogs: string[][]): Log[] => {
       let arr3 = arr2.split(':');
       obj[arr3[0].toLowerCase() as keyof Log] = arr3[1].toLowerCase();
     });
+    const email = obj.email ?? '';
+    obj.isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     returnValue.push(obj as Log);
   });
   return returnValue;
 };
 
+// /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 console.log(objectCreator(logSplitter(logs)));
