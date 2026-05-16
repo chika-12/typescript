@@ -1,6 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
 import topScorer from '../utils/topscorer.ts';
 import calStudentScore from '../utils/calculateAverage.ts';
+import { catchAsync } from '../utils/catchAsync.ts';
+import { addOrUpdateResult } from '../services/addOrUpdateScore.ts';
+import AppError from '../utils/appError.ts';
 
 const students: Record<string, number[]> = {
   chika: [23, 45, 35, 89],
@@ -19,3 +22,17 @@ export const getResult = (req: Request, res: Response, next: NextFunction) => {
     },
   });
 };
+
+export const addStudentsResult = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const data = await addOrUpdateResult(req.body);
+    if (!data) {
+      return next(new AppError('something went wrong', 500));
+    }
+    return res.status(200).json({
+      message: 'success',
+      data,
+    });
+  }
+);
+
