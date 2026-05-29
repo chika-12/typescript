@@ -18,6 +18,7 @@ const studentResultSchema = new mongoose.Schema(
         teacherId: String,
       },
     ],
+    session: Date,
   },
   { timestamps: true }
 );

@@ -5,4 +5,5 @@ export interface CreateScoreInput {
   subject: string;
   score: number;
   teacherId: string;
+  session: string;
 }
