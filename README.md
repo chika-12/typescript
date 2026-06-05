@@ -623,12 +623,6 @@ npm run build
 
 Create a `config.env` file:
 
-```env
-PORT=3000
-DATABASE=your_mongodb_connection_string
-PASSWORD=your_mongodb_password
-```
-
 ---
 
 # Author
