@@ -10,7 +10,6 @@ const studentResultSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    term: String,
     scores: [
       {
         subject: String,
@@ -18,7 +17,8 @@ const studentResultSchema = new mongoose.Schema(
         teacherId: String,
       },
     ],
-    session: Date,
+    term: { type: String, required: true },
+    session: { type: String, required: true },
   },
   { timestamps: true }
 );

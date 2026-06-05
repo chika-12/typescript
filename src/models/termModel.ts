@@ -14,6 +14,8 @@ const termSchema = new mongoose.Schema(
       enum: ['first', 'second', 'third'],
     },
 
+    offeredSubjects: [String],
+
     isFinalised: {
       type: Boolean,
       default: false,
@@ -34,11 +36,12 @@ const termSchema = new mongoose.Schema(
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // admin or school staff
+      ref: 'User',
     },
   },
   {
     timestamps: true,
   }
 );
+
 export const Term = mongoose.model('Term', termSchema);
