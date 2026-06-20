@@ -1,10 +1,9 @@
-// @ts-nocheck
+//@ts-nocheck
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { HydratedDocument } from 'mongoose';
-import { IUser } from '../interfaces/user.interface.ts';
+import type { IStaff } from '../interfaces/staff.interface.ts';
 
-const usersSchema = new mongoose.Schema<IUser>(
+const staffSchema = new mongoose.Schema<IStaff>(
   {
     firstName: {
       type: String,
@@ -18,59 +17,96 @@ const usersSchema = new mongoose.Schema<IUser>(
       trim: true,
     },
 
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [8, 'Password must be at least 8 characters'],
-    },
-
     email: {
       type: String,
       required: [true, 'Email is required'],
       unique: true,
       lowercase: true,
       trim: true,
-
       validate: {
         validator: function (value: string) {
           return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         },
-
         message: 'Please provide a valid email address',
       },
     },
 
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      minlength: [8, 'Password must be at least 8 characters'],
+    },
+
     role: {
       type: String,
+      enum: ['teacher', 'admin', 'superAdmin'],
+      required: [true, 'Role is required'],
+    },
 
-      enum: ['user', 'student', 'teacher', 'admin', 'superAdmin'],
+    phone: {
+      type: String,
+      trim: true,
+    },
 
-      default: 'user',
+    employeeId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+
+    address: {
+      type: String,
+      trim: true,
     },
 
     isActive: {
       type: Boolean,
       default: true,
     },
-    address: String,
+
+    mustChangePassword: {
+      type: Boolean,
+      default: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-usersSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+// Auto-generate employeeId for teachers
+staffSchema.pre('save', async function () {
+  if (this.role !== 'teacher') return;
+  if (this.employeeId) return;
 
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
+  const year = new Date().getFullYear();
+
+  const lastStaff = await Staff.findOne(
+    { employeeId: { $regex: `^KDC/TCH/${year}/` } },
+    { employeeId: 1 },
+    { sort: { createdAt: -1 } },
+  );
+  let sequential = 1;
+  if (lastStaff?.employeeId) {
+    const lastNumber = parseInt(lastStaff.employeeId.split('/').pop(), 10);
+    sequential = lastNumber + 1;
+  }
+  this.employeeId = `KDC/TCH/${year}/${String(sequential).padStart(3, '0')}`;
 });
 
-usersSchema.methods.comparePassword = async function (enteredPassword) {
-  return bcrypt.compare(enteredPassword, this.Password);
+// Hash password
+staffSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+  this.password = await bcrypt.hash(this.password, 12);
+});
+
+// Compare password on login
+staffSchema.methods.comparePassword = async function (enteredPassword: string) {
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
-usersSchema.pre(/^find/, function (next) {
+// Never return inactive staff
+staffSchema.pre(/^find/, function (next) {
   this.find({ isActive: true });
-  next();
 });
 
-export const Users = mongoose.model('Users', usersSchema);
+export const Staff = mongoose.model('Staff', staffSchema);

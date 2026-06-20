@@ -24,7 +24,7 @@ export const createStudent = async (data: CreateStudentInput) => {
 
 export const updateStudent = async function (
   id: string,
-  data: UpdateStudentInput
+  data: UpdateStudentInput,
 ) {
   const allowedFields = [
     'name',
@@ -35,12 +35,12 @@ export const updateStudent = async function (
     'studentFile',
   ];
   const filteredBody = Object.fromEntries(
-    Object.entries(data).filter(([key]) => allowedFields.includes(key))
+    Object.entries(data).filter(([key]) => allowedFields.includes(key)),
   );
   const updatedData = await Student.findByIdAndUpdate(
     id,
     { $set: filteredBody },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
   return updatedData;
 };
@@ -64,7 +64,7 @@ export const searchStudentById = async (data: string) => {
 export const searchStudents = async (
   query: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ) => {
   const { filter, sort, count } = parseStudentQuery(query);
   const skip = (page - 1) * limit;

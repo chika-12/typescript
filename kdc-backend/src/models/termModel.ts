@@ -14,7 +14,7 @@ const termSchema = new mongoose.Schema(
       enum: ['first', 'second', 'third'],
     },
 
-    offeredSubjects: [String],
+    //offeredSubjects: [String], change average calc to classSubject.subjects
 
     isFinalised: {
       type: Boolean,
@@ -41,7 +41,7 @@ const termSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Term = mongoose.model('Term', termSchema);

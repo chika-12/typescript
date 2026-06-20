@@ -1,5 +1,4 @@
 import AppError from './appError.ts';
-
 export const parseDMYDate = (value: string) => {
   if (!value) return undefined;
 
