@@ -62,16 +62,14 @@ const studentSchema = new mongoose.Schema(
 );
 studentSchema.index({ name: 1, dob: 1, gender: 1 }, { unique: true });
 
-// Auto-generate studentId before saving
 studentSchema.pre('save', async function (next) {
   if (this.studentId) return next();
 
   const year = new Date().getFullYear();
   const prefix = this.name.substring(0, 3).toUpperCase();
 
-  const count = await Student.countDocuments({
-    studentId: { $regex: `^${prefix}/${year}/` },
-  });
+  const count = await Student.countDocuments();
+  console.log('Count:', count);
 
   const sequential = String(count + 1).padStart(3, '0');
   this.studentId = `${prefix}/${year}/${sequential}`;

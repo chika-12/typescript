@@ -11,13 +11,19 @@ const examSessionSchema = new mongoose.Schema(
       ref: 'TimeTable',
       required: true,
     },
+    exam: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Exam',
+      required: true,
+    },
     answers: [
       {
-        questions: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
-        selectedAnswers: {
+        question: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
+        selectedAnswer: {
           type: String,
           enum: ['A', 'B', 'C', 'D'],
         },
+        isCorrect: Boolean,
       },
     ],
     cbtScore: Number,
@@ -26,6 +32,10 @@ const examSessionSchema = new mongoose.Schema(
       enum: ['pending', 'active', 'submitted', 'auto-submitted'],
       default: 'pending',
     },
+    noFailed: Number,
+    percentage: Number,
+    startTime: Date,
+    endTime: Date,
   },
   { timestamps: true },
 );

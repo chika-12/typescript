@@ -40,6 +40,7 @@ export const signUpStaffs = async function (data: IStaff) {
       500,
     );
   }
+  console.log(`${generatedPassword}`);
 
   return staff;
 };

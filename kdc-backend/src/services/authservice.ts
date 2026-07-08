@@ -24,7 +24,6 @@ export const loginService = async (identifier: string, password: string) => {
     const student = (await Student.findOne({ studentId: identifier }).select(
       '+password',
     )) as any;
-    console.log(student);
     if (!student || !(await student.comparePassword(password))) {
       throw new AppError('Invalid credentials from password', 401);
     }

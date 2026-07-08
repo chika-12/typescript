@@ -7,18 +7,16 @@ const studentResultSchema = new mongoose.Schema(
       ref: 'Student',
       required: true,
     },
-    subject: {
+    exam: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Subject',
-    },
-    teacher: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'TeacherAssign',
+      ref: 'Exam',
+      required: true,
     },
     cbtScore: {
       type: Number,
       min: 0,
       max: 100,
+      required: true,
     },
     writtenScore: {
       type: Number,
@@ -32,18 +30,15 @@ const studentResultSchema = new mongoose.Schema(
     },
     grade: {
       type: String,
-      enum: ['A1', 'B2', 'B3', 'C4', 'C5', 'C6', 'D7', 'E8', 'F9'],
+      enum: ['A1', 'B2', 'B3', 'C4', 'C5', 'C6', 'D7', 'F9'],
     },
-    isLocked: {
-      type: Boolean,
-      default: false,
-    },
-    term: { type: mongoose.Schema.Types.ObjectId, ref: 'Term', required: true },
+    createdAt: Date,
+    updatedAt: Date,
   },
   { timestamps: true },
 );
-studentResultSchema.index(
-  { student: 1, term: 1, subject: 1 },
-  { unique: true },
-);
+
+// Unique constraint: one result per student per exam
+studentResultSchema.index({ student: 1, exam: 1 }, { unique: true });
+
 export const Result = mongoose.model('Result', studentResultSchema);

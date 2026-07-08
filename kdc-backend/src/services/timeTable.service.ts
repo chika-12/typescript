@@ -64,7 +64,8 @@ export const updateTimeTable = async (
 };
 
 export const deleteExamTimeTable = async (id: string) => {
-  const data = await TimeTable.findById(id);
+  const data = await TimeTable.findOne({ _id: id });
+  console.log('Delete', data);
 
   if (!data) {
     throw new AppError('Data not found', 404);
