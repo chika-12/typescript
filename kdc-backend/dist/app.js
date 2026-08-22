@@ -1,0 +1,40 @@
+import express from 'express';
+import helmet from 'helmet';
+import morgan from 'morgan';
+//import mongoSanitize from 'express-mongo-sanitize';
+import resultRouter from "./routes/result.route.js";
+import termRoute from "./routes/createTerm.js";
+import errorHandler from "./middleware/globalErrorHandler.js";
+import studentRoute from "./routes/studentRoute.js";
+import staffRoute from "./routes/staffRoute.js";
+import "./utils/cronJob.js";
+import authRoute from "./routes/authRoute.js";
+import subjectRouter from "./routes/subjectRoute.js";
+import classSubjectRouter from "./routes/classSubject.route.js";
+import teacherAssingRouter from "./routes/assignTeacher.route.js";
+import timeTableRouter from "./routes/timeTable.route.js";
+import examRouter from "./routes/exam.route.js";
+import questionRouter from "./routes/question.route.js";
+import examSessionRouter from "./routes/examSession.route.js";
+//import hpp from 'hpp'
+const app = express();
+app.use(helmet());
+app.use(express.json());
+//app.use(mongoSanitize());
+//app.use(hpp)
+app.use(morgan('dev'));
+app.use('/api/v1/student', studentRoute);
+app.use('/api/v1/result', resultRouter);
+app.use('/api/v1/term', termRoute);
+app.use('/api/v1/staff', staffRoute);
+app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/subjects', subjectRouter);
+app.use('/api/v1/class-subjects', classSubjectRouter);
+app.use('/api/v1/teacher-assign', teacherAssingRouter);
+app.use('/api/v1/time-table', timeTableRouter);
+app.use('/api/v1/exam', examRouter);
+app.use('/api/v1/exam-session', examSessionRouter);
+app.use('/api/v1/:examId', questionRouter);
+app.use(errorHandler);
+export default app;
+//# sourceMappingURL=app.js.map
